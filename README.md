@@ -18,11 +18,11 @@ const id = await Effect.runPromise(userId.make.pipe(Effect.provide(SecureRandom.
 
 ## Prerequisites and setup
 
-Use an ESM project with Node.js 24 or newer and Effect 4.1 or newer within major version 4.
+Use an ESM project with Node.js 24 or newer and Effect 4.1.4 or newer within major version 4.
 Install with Vite+ when the package is available on npm:
 
 ```bash
-vp add @totto2727/effect-identify effect@^4.1.0
+vp add @totto2727/effect-identify effect@^4.1.4
 ```
 
 This repository is currently private and registry publication is disabled.
@@ -54,7 +54,7 @@ Returns:
 - `make`: A reusable effect generating one validated identifier per execution. Requires the caller's `SecureRandom.SecureRandom` service and retrieves that service each time it runs.
 
 The library does not provide a randomness layer or select a runtime.
-Effect 4.1 exposes this service as `SecureRandom` from `effect/crypto`.
+Effect 4.1.4 exposes this service as `SecureRandom` from `effect/crypto`.
 Unexpected generated values that fail schema validation become defects rather than typed failures.
 
 ```ts
