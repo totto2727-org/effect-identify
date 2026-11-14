@@ -25,7 +25,8 @@ Install with Vite+ when the package is available on npm:
 vp add @totto2727/effect-identify effect@^4.1.4
 ```
 
-This repository is currently private and registry publication is disabled.
+Registry publication is disabled until the owner configures npm trusted publishing.
+GitHub repository visibility is managed separately in infra and does not enable npm publication.
 
 ## API
 
