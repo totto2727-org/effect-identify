@@ -2,7 +2,9 @@ import { Effect, Schema } from 'effect'
 import { SecureRandom } from 'effect/crypto'
 import { expect, test } from 'vite-plus/test'
 
-import { decodeUserDefinedId, makePrefixedUUIDv4, UserDefinedId, UUIDv4 } from './index.ts'
+import { makePrefixedUUIDv4, UserDefinedId } from './index.ts'
+
+const decodeUserDefinedId = Schema.decodeUnknownSync(UserDefinedId)
 
 test.each(['a', 'AZaz09_-', 'a'.repeat(128)])('accepts ASCII identifier %s', (value) => {
   expect(decodeUserDefinedId(value)).toBe(value)
@@ -40,13 +42,13 @@ test.each(['', 'a'.repeat(129), ' a', 'a/b', '日本語'])('rejects invalid pref
 const uuid = '123e4567-e89b-42d3-a456-426614174000'
 
 test('accepts UUIDv4', () => {
-  expect(Schema.decodeUnknownSync(UUIDv4)(uuid)).toBe(uuid)
+  expect(Schema.decodeUnknownSync(makePrefixedUUIDv4('test').schema)(`test_${uuid}`)).toBe(`test_${uuid}`)
 })
 
 test.each(['123e4567-e89b-12d3-a456-426614174000', '123e4567-e89b-42d3-7456-426614174000', 'not-a-uuid'])(
   'rejects non-v4 UUID %s',
   (value) => {
-    expect(() => Schema.decodeUnknownSync(UUIDv4)(value)).toThrow()
+    expect(() => Schema.decodeUnknownSync(makePrefixedUUIDv4('test').schema)(`test_${value}`)).toThrow()
   },
 )
 

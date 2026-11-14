@@ -47,7 +47,8 @@ flake.nix           Development shells only
 
 ### Public library boundary
 
-- Keep the library limited to `UserDefinedId`, `decodeUserDefinedId`, `UUIDv4`, `makePrefixedUUIDv4`, and the schema-derived identifier types.
+- Keep public exports limited to `UserDefinedId`, `makePrefixedUUIDv4`, and the schema-derived `PrefixedUUIDv4` type.
+- Keep the prefix decoder and UUIDv4 component schema internal. Do not add convenience exports before an actual use case requires them.
 - Validate prefixes synchronously, before constructing effects.
 - Keep secure randomness as an explicit injected service requirement on `make`. Do not provide a layer, select a runtime, or read global randomness inside the library. Consumers provide the service at their composition root.
 - Return only `{ schema, make }`. The reusable `make` effect retrieves the caller's secure randomness service on each execution.

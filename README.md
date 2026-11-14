@@ -7,11 +7,11 @@ Minimal identifier schemas and prefixed UUIDv4 generation for Effect.
 Provide secure randomness at your application's composition root:
 
 ```ts
-import { decodeUserDefinedId, makePrefixedUUIDv4 } from '@totto2727/effect-identify'
+import { makePrefixedUUIDv4 } from '@totto2727/effect-identify'
 import { Effect } from 'effect'
 import { SecureRandom } from 'effect/crypto'
 
-const userId = makePrefixedUUIDv4(decodeUserDefinedId('user'))
+const userId = makePrefixedUUIDv4('user')
 const id = await Effect.runPromise(userId.make.pipe(Effect.provide(SecureRandom.layerWebCrypto)))
 // user_<UUIDv4>
 ```
@@ -34,16 +34,8 @@ This repository is currently private and registry publication is disabled.
 An Effect string schema and its inferred type.
 Accepts 1 to 128 ASCII letters, digits, underscores, or hyphens.
 Rejects whitespace, control characters, path separators, and Unicode characters without normalizing input.
-The inferred type is `string`, not a brand, so use the decoder for runtime validation.
-
-### `decodeUserDefinedId(value: unknown): UserDefinedId`
-
-Validates synchronously and returns the unchanged string.
-Throws a schema error for invalid input.
-
-### `UUIDv4`
-
-An Effect string schema checked with `Schema.isUUID(4)`.
+The inferred type is `string`, not a brand, so use `Schema.decodeUnknownSync(UserDefinedId)` to validate external input.
+The prefix factory also validates its input synchronously.
 
 ### `makePrefixedUUIDv4(prefix: UserDefinedId)`
 

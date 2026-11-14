@@ -8,9 +8,9 @@ export const UserDefinedId = Schema.String.check(
 )
 export type UserDefinedId = typeof UserDefinedId.Type
 
-export const decodeUserDefinedId = Schema.decodeUnknownSync(UserDefinedId)
+const decodeUserDefinedId = Schema.decodeUnknownSync(UserDefinedId)
 
-export const UUIDv4 = Schema.String.check(Schema.isUUID(4))
+const UUIDv4 = Schema.String.check(Schema.isUUID(4))
 
 export function makePrefixedUUIDv4(prefix: UserDefinedId) {
   const fixedPrefix = decodeUserDefinedId(prefix) + '_'
