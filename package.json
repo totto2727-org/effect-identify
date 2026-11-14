@@ -1,12 +1,12 @@
 {
-  "name": "template-vite-plus-lib",
-  "version": "0.0.0",
+  "name": "@totto2727/effect-identify",
+  "version": "0.1.0",
   "private": true,
-  "description": "A simple TypeScript library with Vite+",
+  "description": "Minimal identifier schemas and prefixed UUIDv4 generation for Effect",
   "license": "MIT",
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/totto2727-org/template-vite-plus-lib.git"
+    "url": "git+https://github.com/totto2727-org/effect-identify.git"
   },
   "files": [
     "dist"
@@ -28,8 +28,12 @@
     "@tsconfig/node-ts": "^23.6.4",
     "@tsconfig/strictest": "^2.0.8",
     "@types/node": "^24.19.1",
+    "effect": "^4.1.0",
     "typescript": "^7.0.2",
     "vite-plus": "catalog:"
+  },
+  "peerDependencies": {
+    "effect": "^4.1.0"
   },
   "engines": {
     "node": ">=24"
