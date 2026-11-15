@@ -25,8 +25,16 @@ Install with Vite+ when the package is available on npm:
 vp add @totto2727/effect-identify effect@^4.1.4
 ```
 
-Registry publication is disabled until the owner configures npm trusted publishing.
-GitHub repository visibility is managed separately in infra and does not enable npm publication.
+Publication CI is enabled for pushes of `v*` tags only, not branch pushes, pull requests, GitHub releases, or manual dispatch.
+Enabling CI does not publish this package or confirm npm authorization.
+Before the first release tag, the owner must configure [npm trusted publishing](https://docs.npmjs.com/trusted-publishers/) for package `@totto2727/effect-identify`, GitHub owner `totto2727-org`, repository `effect-identify`, and workflow filename `publish.yml`.
+Allow direct publishing, not staged-only publishing, because the shared action performs a provenance-enabled direct publish.
+No GitHub environment is configured, so leave the trusted publisher environment unset unless a matching protected job environment is added.
+If npm requires an initial publication before registry settings are available, the owner must perform that bootstrap manually.
+After trusted publishing is confirmed, protect release tags and push a `v<version>` tag matching `package.json` from a validated commit, using a new version for changed contents.
+The workflow installs locked dependencies, builds the archive, and invokes the shared publisher with job-scoped OIDC permissions on a GitHub-hosted runner, without registry tokens.
+The hook-free Nix `ci` shell avoids calling `vp config` before the TypeScript setup installs Vite+.
+GitHub repository visibility is managed separately in infra and does not authorize npm publication.
 
 ## API
 
