@@ -10,17 +10,17 @@ export type UserDefinedId = typeof UserDefinedId.Type
 
 const decodeUserDefinedId = Schema.decodeUnknownSync(UserDefinedId)
 
-const UUIDv4 = Schema.String.check(Schema.isUUID(4))
+export const UUIDv4 = Schema.String.check(Schema.isUUID(4))
 
 export function makePrefixedUUIDv4(prefix: UserDefinedId) {
   const fixedPrefix = decodeUserDefinedId(prefix) + '_'
   const schema = Schema.TemplateLiteral([fixedPrefix, UUIDv4])
   const decode = Schema.decodeUnknownEffect(schema)
-  const make = Effect.fn('Identity.makePrefixedUUIDv4')(function* () {
+  const make = Effect.gen(function* () {
     const crypto = yield* SecureRandom.SecureRandom
     const uuid = yield* crypto.uuidV4()
     return yield* decode(fixedPrefix + uuid).pipe(Effect.orDie)
-  })()
+  })
   return { schema, make }
 }
 

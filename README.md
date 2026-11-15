@@ -46,6 +46,19 @@ Rejects whitespace, control characters, path separators, and Unicode characters 
 The inferred type is `string`, not a brand, so use `Schema.decodeUnknownSync(UserDefinedId)` to validate external input.
 The prefix factory also validates its input synchronously.
 
+### `UUIDv4`
+
+An Effect string schema that validates unprefixed UUID version 4 values, including the UUID variant.
+It is the same schema used as the UUID component of each prefixed identifier.
+Validation does not generate an identifier or require a randomness service.
+
+```ts
+import { UUIDv4 } from '@totto2727/effect-identify'
+import { Schema } from 'effect'
+
+const uuid = Schema.decodeUnknownSync(UUIDv4)('123e4567-e89b-42d3-a456-426614174000')
+```
+
 ### `makePrefixedUUIDv4(prefix: UserDefinedId)`
 
 Validates the prefix synchronously and appends one underscore, including when the prefix already ends in an underscore.
