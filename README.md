@@ -19,37 +19,17 @@ const id = await Effect.runPromise(userId.make.pipe(Effect.provide(SecureRandom.
 ## Prerequisites and setup
 
 Use an ESM project with Node.js 24 or newer and Effect 4.1.4 or newer within major version 4.
-Install with Vite+ when the package is available on npm:
+Install with:
 
 ```bash
 vp add @totto2727/effect-identify effect@^4.1.4
 ```
 
-Publication CI is enabled for pushes of `v*` tags only, not branch pushes, pull requests, GitHub releases, or manual dispatch.
-Enabling CI does not publish this package or confirm npm authorization.
-Before the first release tag, the owner must configure [npm trusted publishing](https://docs.npmjs.com/trusted-publishers/) for package `@totto2727/effect-identify`, GitHub owner `totto2727-org`, repository `effect-identify`, and workflow filename `publish.yml`.
-The shared action uses provenance-enabled [staged publishing](https://github.com/voidzero-dev/vite-plus/blob/main/docs/guide/package-management/stage.md), not direct publication to the live registry.
-Use staging-only publisher permissions when available; CI does not need permission to approve staged versions.
-No GitHub environment is configured, so leave the trusted publisher environment unset unless a matching protected job environment is added.
-If npm requires an initial publication before registry settings are available, the owner must perform that bootstrap manually.
-After trusted publishing is confirmed, protect release tags and push a `v<version>` tag matching `package.json` from a validated commit, using a new version for changed contents.
-The workflow installs locked dependencies, builds the archive, and stages the package with job-scoped OIDC permissions on a GitHub-hosted runner, without registry tokens.
-After CI stages a version, the owner must review it with `vp pm stage list @totto2727/effect-identify`, `vp pm stage view <stage-id>`, and `vp pm stage download <stage-id>`.
-Only after review, the owner can run `vp pm stage approve <stage-id>` on a trusted device and complete the required 2FA to make the version live.
-Use `vp pm stage reject <stage-id>` instead if review finds a problem.
-Neither staging nor approval is performed merely by enabling this workflow; release tags, uploads, and approval require separate authorization.
-The hook-free Nix `ci` shell avoids calling `vp config` before the TypeScript setup installs Vite+.
-GitHub repository visibility is managed separately in infra and does not authorize npm publication.
-
 ## API
 
-### `UserDefinedId` and `type UserDefinedId`
+### `UserDefinedId`
 
-An Effect string schema and its inferred type.
-Accepts 1 to 128 ASCII letters, digits, underscores, or hyphens.
-Rejects whitespace, control characters, path separators, and Unicode characters without normalizing input.
-The inferred type is `string`, not a brand, so use `Schema.decodeUnknownSync(UserDefinedId)` to validate external input.
-The prefix factory also validates its input synchronously.
+A string schema for 1 to 128 ASCII letters, digits, underscores, or hyphens.
 
 ### `UUIDv4`
 

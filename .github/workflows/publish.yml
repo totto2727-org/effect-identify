@@ -1,4 +1,4 @@
-# Configure npm trusted publishing before pushing a release tag. See README.md.
+# Configure npm trusted publishing before pushing a release tag. See AGENTS.md.
 name: Publish to npm
 
 # Preserve the inherited tag-only release trigger. Branch pushes do not publish.
