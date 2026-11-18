@@ -10,7 +10,7 @@ package.json        Package identity and runtime/type export map
 pnpm-lock.yaml            Sole dependency lock for pnpm
 pnpm-workspace.yaml         pnpm installation policy and 24-hour release-age requirement
 flake.nix           Development shells only
-.github/workflows/  CI and tag-triggered npm publication
+.github/workflows/  CI and main-push npm publication
 ```
 
 ## Development commands
@@ -41,7 +41,7 @@ flake.nix           Development shells only
 ### CI and publication policy
 
 - Keep the inherited CI and publication workflows unchanged by default.
-- Do not replace publication on pushes to `main` with tag or release triggers. Preserve existing tag triggers where already configured.
+- Publication runs on pushes to `main`, including merges. Do not add tag or release triggers.
 - Change workflows only for an explicit user request or a demonstrated project requirement, and explain why the change is necessary.
 - Publication setup does not justify unrelated CI changes.
 
@@ -74,10 +74,10 @@ flake.nix           Development shells only
 - Keep `pnpm-workspace.yaml`'s `minimumReleaseAge: 1440` and `minimumReleaseAgeStrict: true` for all new dependency resolutions, without exclusions. Keep the exact Vite+ 1.1.0 catalog entry and official `vite@*` alias and bundled `vitest@*` 5.0.3 overrides there. Preserve the other dependencies' caret ranges and review dependency lifecycle scripts before allowing them. When updating Vite+, match the alias to the installed `vite-plus` version and the `vitest` override to `vp toolchain vitest`. See [pnpm dependency policy](https://pnpm.io/settings#minimumreleaseage).
 - Do not introduce `package.nix`, Nix package or CLI overlay outputs, CLI installation routes, or Nix build CI.
 - Keep README usage consumer-focused, document all public exports, and use only supported dependency installation paths. Write registry setup for the configured package name, assuming publication.
-- Publication CI is explicitly enabled in `publish.yml`, and the manifest is publishable. Before creating any release tag, require the owner's confirmation of npm trusted publishing for `totto2727-org/effect-identify` and workflow filename `publish.yml`. If an initial package publication is required to create registry settings, the owner must perform it manually. Prefer staging-only publisher permissions when available. The shared publisher stages versions; the owner reviews and approves them with 2FA before live publication. Never stage or approve merely to test CI. Match any configured environment with a protected workflow job environment. No environment is currently configured.
-- Preserve the inherited `v*` tag-push trigger. Branch pushes, pull requests, GitHub releases, and manual dispatch do not publish. Never create a release tag merely to test CI.
+- Publication CI is explicitly enabled in `publish.yml`, and the manifest is publishable. Before merging publication changes to `main`, require the owner's confirmation of npm trusted publishing for `totto2727-org/effect-identify` and workflow filename `publish.yml`. If an initial package publication is required to create registry settings, the owner must perform it manually. Prefer staging-only publisher permissions when available. The shared publisher stages versions; the owner reviews and approves them with 2FA before live publication. Never stage or approve merely to test CI. Match any configured environment with a protected workflow job environment. No environment is currently configured.
+- Protect `main` and merge validated changes to trigger publication. Tag pushes, pull requests, GitHub releases, and manual dispatch do not publish. Never merge or publish merely to test CI.
 - Use the hook-free Nix `ci` shell for setup, building, and publication so setup does not call `vp config` before Vite+ is installed.
-- Before releasing, review package metadata, third-party action pins, protected release tags, and a real packed consumer. Use a protected `v<version>` tag matching the manifest from a validated commit.
+- Before merging to `main`, review package metadata, third-party action pins, branch protection, and a real packed consumer.
 - Retain job-scoped `id-token: write` and a GitHub-hosted runner. Do not add long-lived registry tokens. The publish workflow installs locked dependencies, runs `vp pack`, then calls `publish-npm@main` with the required `working-directory: .`. It must not duplicate pre-merge checks, tests, or dry runs.
 - The shared publish action uses `vp pm stage publish -r --provenance` and filters private packages and versions already present on the registry. Use a new version for changed contents. Enabling CI does not authorize or perform a release. Never add registry tokens or publish as part of a coding task without authorization.
 

@@ -1,10 +1,10 @@
-# Configure npm trusted publishing before pushing a release tag. See AGENTS.md.
+# Configure npm trusted publishing before merging to main. See AGENTS.md.
 name: Publish to npm
 
-# Preserve the inherited tag-only release trigger. Branch pushes do not publish.
+# Publish after changes merge into main. Tag pushes do not trigger publication.
 on:
   push:
-    tags: ['v*']
+    branches: [main]
 
 jobs:
   publish:

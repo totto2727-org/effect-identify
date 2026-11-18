@@ -31,6 +31,13 @@ vp add @totto2727/effect-identify effect@^4.1.4
 
 A string schema for 1 to 128 ASCII letters, digits, underscores, or hyphens.
 
+```ts
+import { UserDefinedId } from '@totto2727/effect-identify'
+import { Schema } from 'effect'
+
+const id = Schema.decodeUnknownSync(UserDefinedId)('my-project_01')
+```
+
 ### `UUIDv4`
 
 An Effect string schema that validates unprefixed UUID version 4 values, including the UUID variant.
@@ -44,34 +51,23 @@ import { Schema } from 'effect'
 const uuid = Schema.decodeUnknownSync(UUIDv4)('123e4567-e89b-42d3-a456-426614174000')
 ```
 
-### `makePrefixedUUIDv4(prefix: UserDefinedId)`
+### `PrefixedUUIDv4`
 
-Validates the prefix synchronously and appends one underscore, including when the prefix already ends in an underscore.
-Returns:
-
-- `schema`: A template-literal schema for the fixed prefix followed by a UUIDv4.
-- `make`: A reusable effect generating one validated identifier per execution. Requires the caller's `SecureRandom.SecureRandom` service and retrieves that service each time it runs.
-
-The library does not provide a randomness layer or select a runtime.
-Effect 4.1.4 exposes this service as `SecureRandom` from `effect/crypto`.
-Unexpected generated values that fail schema validation become defects rather than typed failures.
+`makePrefixedUUIDv4(prefix: UserDefinedId)` returns a `schema` for `<prefix>_<UUIDv4>` and a reusable `make` effect.
+`PrefixedUUIDv4` is the schema-derived output type.
+Provide secure randomness when running `make`, and use the returned schema to validate external identifiers for that prefix.
 
 ```ts
-import { makePrefixedUUIDv4 } from '@totto2727/effect-identify'
-import { Effect } from 'effect'
+import { makePrefixedUUIDv4, type PrefixedUUIDv4 } from '@totto2727/effect-identify'
+import { Effect, Schema } from 'effect'
 import { SecureRandom } from 'effect/crypto'
 
 const jobId = makePrefixedUUIDv4('job')
-const program = jobId.make.pipe(Effect.provide(SecureRandom.layerWebCrypto))
-const first = await Effect.runPromise(program)
-const second = await Effect.runPromise(program)
+const id: PrefixedUUIDv4 = await Effect.runPromise(jobId.make.pipe(Effect.provide(SecureRandom.layerWebCrypto)))
+
+const decodeJobId = Schema.decodeUnknownSync(jobId.schema)
+const restored = decodeJobId('job_123e4567-e89b-42d3-a456-426614174000')
 ```
-
-### `type PrefixedUUIDv4`
-
-The output type derived from the factory's `schema`.
-It is currently inferred as `string`, not a brand or a compile-time guarantee of a particular prefix or UUID version.
-Use the returned schema to validate external identifiers for a specific prefix.
 
 ## Development
 
