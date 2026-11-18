@@ -1,5 +1,5 @@
 {
-  description = "A simple Vite+ library development environment";
+  description = "Minimal Effect identifier library development environment";
 
   inputs = {
     nixpkgs.url = "https://flakehub.com/f/NixOS/nixpkgs/0.1";
