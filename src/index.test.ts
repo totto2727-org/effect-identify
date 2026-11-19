@@ -1,9 +1,11 @@
 // oxlint-disable rules/no-effect-runtime-run -- Each test is an independent consumer runtime boundary.
 import { Effect, Schema } from 'effect'
 import { SecureRandom } from 'effect/crypto'
-import { describe, expect, it } from 'vite-plus/test'
+import { describe, expect, test } from 'vite-plus/test'
 
+// oxlint-disable-next-line rules/no-import-from-barrel-package -- These tests exercise the public entry point rather than its internals.
 import { makePrefixedUUIDv4, UserDefinedId, UUIDv4 } from './index.ts'
+// oxlint-disable-next-line rules/no-import-from-barrel-package -- The public export test checks the entire namespace.
 import * as Identify from './index.ts'
 
 const isUserDefinedId = Schema.is(UserDefinedId)
@@ -16,11 +18,11 @@ const uuid = '123e4567-e89b-42d3-a456-426614174000'
 const missingIdentifiers = [null, undefined]
 
 describe('user-defined identifiers', () => {
-  it.each(['a', 'AZaz09_-', 'a'.repeat(maxIdentifierLength)])('accepts ASCII identifier %s', (value) => {
+  test.each(['a', 'AZaz09_-', 'a'.repeat(maxIdentifierLength)])('accepts ASCII identifier %s', (value) => {
     expect(isUserDefinedId(value)).toBe(true)
   })
 
-  it.each([
+  test.each([
     '',
     oversizedIdentifier,
     ' a',
@@ -45,17 +47,17 @@ describe('user-defined identifiers', () => {
 })
 
 describe('unprefixed and prefixed UUID validation', () => {
-  it('exports the standalone UUIDv4 schema alongside the identifier API', () => {
+  test('exports the standalone UUIDv4 schema alongside the identifier API', () => {
     expect(Object.keys(Identify).toSorted()).toStrictEqual(['UUIDv4', 'UserDefinedId', 'makePrefixedUUIDv4'])
     expect(Identify.UUIDv4).toBe(UUIDv4)
   })
 
-  it('accepts UUIDv4', () => {
+  test('accepts UUIDv4', () => {
     expect(isUUIDv4(uuid)).toBe(true)
     expect(Schema.is(makePrefixedUUIDv4('test').schema)(`test_${uuid}`)).toBe(true)
   })
 
-  it.each(['123e4567-e89b-12d3-a456-426614174000', '123e4567-e89b-42d3-7456-426614174000', 'not-a-uuid'])(
+  test.each(['123e4567-e89b-12d3-a456-426614174000', '123e4567-e89b-42d3-7456-426614174000', 'not-a-uuid'])(
     'rejects non-v4 UUID %s',
     (value) => {
       expect(isUUIDv4(value)).toBe(false)
@@ -63,7 +65,7 @@ describe('unprefixed and prefixed UUID validation', () => {
     },
   )
 
-  it('schema accepts only the configured prefix and a UUIDv4', () => {
+  test('schema accepts only the configured prefix and a UUIDv4', () => {
     const { schema } = makePrefixedUUIDv4('user_')
     const isPrefixedUUIDv4 = Schema.is(schema)
     expect(isPrefixedUUIDv4(`user__${uuid}`)).toBe(true)
@@ -73,18 +75,18 @@ describe('unprefixed and prefixed UUID validation', () => {
 })
 
 describe('prefixed UUID generation', () => {
-  it.each(['', oversizedIdentifier, ' a', 'a/b', '日本語'])('rejects invalid prefix synchronously %j', (prefix) => {
+  test.each(['', oversizedIdentifier, ' a', 'a/b', '日本語'])('rejects invalid prefix synchronously %j', (prefix) => {
     expect(() => makePrefixedUUIDv4(prefix)).toThrow(Schema.SchemaError)
   })
 
-  it('make generates valid prefixed UUIDv4 through an externally supplied real service', async () => {
+  test('make generates valid prefixed UUIDv4 through an externally supplied real service', async () => {
     const { make, schema } = makePrefixedUUIDv4('user')
     const value = await Effect.runPromise(make.pipe(Effect.provide(SecureRandom.layerWebCrypto)))
     expect(value).toMatch(/^user_[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/u)
     expect(Schema.is(schema)(value)).toBe(true)
   })
 
-  it('make is reusable and each execution generates a new identifier', async () => {
+  test('make is reusable and each execution generates a new identifier', async () => {
     const factory = makePrefixedUUIDv4('job')
     expect(Object.keys(factory)).toStrictEqual(['schema', 'make'])
     const { make, schema } = factory
@@ -97,7 +99,7 @@ describe('prefixed UUID generation', () => {
     expect(first).not.toBe(second)
   })
 
-  it('the same make effect uses the randomness service supplied for each execution', async () => {
+  test('the same make effect uses the randomness service supplied for each execution', async () => {
     const { make, schema } = makePrefixedUUIDv4('injected')
     const isPrefixedUUIDv4 = Schema.is(schema)
     const firstService = SecureRandom.make((size) => new Uint8Array(size).fill(1))

@@ -5,20 +5,21 @@ const maxIdentifierLength = 128
 const uuidVersion = 4
 
 // oxlint-disable-next-line eslint/no-redeclare -- The public schema and its inferred type share a name.
-const UserDefinedId = Schema.String.check(
+export const UserDefinedId = Schema.String.check(
   Schema.isMaxLength(maxIdentifierLength),
   Schema.isTrimmed(),
   Schema.isPattern(/^[A-Za-z0-9_-]+$/u),
 )
-type UserDefinedId = typeof UserDefinedId.Type
+export type UserDefinedId = typeof UserDefinedId.Type
 
 const decodeUserDefinedId = Schema.decodeExit(UserDefinedId)
-const UUIDv4 = Schema.String.check(Schema.isUUID(uuidVersion))
+export const UUIDv4 = Schema.String.check(Schema.isUUID(uuidVersion))
 
+// oxlint-disable-next-line rules/no-readonly -- Effect's TemplateLiteral constructor returns a schema parameterized by a readonly tuple.
 type PrefixedSchema = Schema.TemplateLiteral<readonly [string, Schema.String]>
-type PrefixedUUIDv4 = PrefixedSchema['Type']
+export type PrefixedUUIDv4 = PrefixedSchema['Type']
 
-const makePrefixedUUIDv4 = (
+export const makePrefixedUUIDv4 = (
   prefix: UserDefinedId,
 ): { make: Effect.Effect<PrefixedUUIDv4, never, SecureRandom.SecureRandom>; schema: PrefixedSchema } => {
   const decodedPrefix = decodeUserDefinedId(prefix)
@@ -38,5 +39,3 @@ const makePrefixedUUIDv4 = (
   // oxlint-disable-next-line eslint/sort-keys -- Keep the returned object's existing property order.
   return { schema, make }
 }
-
-export { makePrefixedUUIDv4, type PrefixedUUIDv4, UserDefinedId, UUIDv4 }
