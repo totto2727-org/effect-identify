@@ -10,7 +10,3 @@ overrides:
 
 minimumReleaseAge: 1440
 minimumReleaseAgeStrict: true
-
-# Temporary exception for the shared Oxlint adoption. Remove after 2026-11-20T17:43:52Z.
-minimumReleaseAgeExclude:
-  - '@totto2727/oxlint@0.2.0'
