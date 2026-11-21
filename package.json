@@ -1,6 +1,6 @@
 {
   "name": "@totto2727/effect-identify",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "description": "Minimal identifier schemas and prefixed UUIDv4 generation for Effect",
   "license": "MIT",
   "repository": {
