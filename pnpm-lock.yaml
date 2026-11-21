@@ -21,6 +21,9 @@ importers:
       '@totto2727/gitignore-patterns':
         specifier: ^0.1.0
         version: 0.1.0
+      '@totto2727/oxlint':
+        specifier: ^0.2.0
+        version: 0.2.0(oxlint-tsgolint@7.0.2003)(vite-plus@1.1.0(@types/node@24.19.1)(@vitest/ui@5.0.3(vitest@5.0.3))(typescript@7.0.2))
       '@tsconfig/node-ts':
         specifier: ^23.6.4
         version: 23.6.4
@@ -352,6 +355,10 @@ packages:
     resolution: {integrity: sha512-S0uyoxakDINJ4DPgqxGlEEvrdSMeQb7Z2lKVjxoY2gwsbZbfg2Xr8Klfeo5ZeraHmmdBCELFUHkSe6KEmBpMvg==}
     engines: {node: ^12.22.0 || ^14.17.0 || >=16.0.0}
 
+  '@oxlint/plugins@1.94.0':
+    resolution: {integrity: sha512-YT6htikBOBQ00XDxZpRZLZ0anEDo7h9s4+YvjRU0/Ng/cLd0D6SZQ3tsms4g/GDer/z8UKlegC5iptEfyRXJcw==}
+    engines: {node: ^12.22.0 || ^14.17.0 || >=16.0.0}
+
   '@polka/url@1.0.0-next.29':
     resolution: {integrity: sha512-wwQAWhWSuHaag8c4q/KN/vCoeOJYshAIvMQwD4GpSb3OiZklFfvAgmj0VCBBImRpuF/aFgIRzllXlVX93Jevww==}
 
@@ -367,6 +374,10 @@ packages:
 
   '@totto2727/gitignore-patterns@0.1.0':
     resolution: {integrity: sha512-hg8SkhlD4pDixWp3EDcsTTXkXM2KKR7H5Xl+ypqC0tced1Z7n3OG+rgBXkemOsgvYBP+TykpKztPyOrAi7ogRA==}
+
+  '@totto2727/oxlint@0.2.0':
+    resolution: {integrity: sha512-agfyNUvoCMFJJnxYTkdCsdrVVt6+qrGYFoOP7Tq9/C/HuLG8oiDor6XTE433bg+MCId5/9fuwBA4qHDyrNiBlQ==}
+    engines: {node: '>=24'}
 
   '@tsconfig/node-ts@23.6.4':
     resolution: {integrity: sha512-37BMJvNQZ+vTgd1xG2TGBkJ6ENeT4eO4Wh2CHrnn0IwH7ybLFCzh4Uc//kc7UIvqiRac4uGdIc1meKOjMSlKzw==}
@@ -1084,6 +1095,11 @@ packages:
     resolution: {integrity: sha512-sf4i37nQ2LBx4m3wB74y+ubopq6W/dIzXg0FDGjsYnZHVa1Da8FH853wlL2gtUhg+xJXjfk3kUZS3BRoQeoQBQ==}
     engines: {node: '>=6'}
 
+  typescript@6.0.3:
+    resolution: {integrity: sha512-y2TvuxSZPDyQakkFRPZHKFm+KKVqIisdg9/CZwm9ftvKXLP8NRWj38/ODjNbr43SsoXqNuAisEf1GdCxqWcdBw==}
+    engines: {node: '>=14.17'}
+    hasBin: true
+
   typescript@7.0.2:
     resolution: {integrity: sha512-8FYau96o3NKOhbjKi/qNvG/W5jhzxkbdm5sj9AbZ/5T5sWqn3hJgLfGx27sRKZWTvyzCP8dLRBTf5tBTSRVUNA==}
     engines: {node: '>=16.20.0'}
@@ -1336,6 +1352,8 @@ snapshots:
 
   '@oxlint/plugins@1.79.0': {}
 
+  '@oxlint/plugins@1.94.0': {}
+
   '@polka/url@1.0.0-next.29': {}
 
   '@testing-library/dom@10.4.1':
@@ -1356,6 +1374,16 @@ snapshots:
   '@totto2727/gitignore-patterns@0.1.0':
     dependencies:
       ignore: 7.0.14
+
+  '@totto2727/oxlint@0.2.0(oxlint-tsgolint@7.0.2003)(vite-plus@1.1.0(@types/node@24.19.1)(@vitest/ui@5.0.3(vitest@5.0.3))(typescript@7.0.2))':
+    dependencies:
+      '@oxlint/plugins': 1.94.0
+      effect: 4.1.4
+      oxlint: 1.87.0(oxlint-tsgolint@7.0.2003)(vite-plus@1.1.0(@types/node@24.19.1)(@vitest/ui@5.0.3(vitest@5.0.3))(typescript@7.0.2))
+      typescript-api: typescript@6.0.3
+    transitivePeerDependencies:
+      - oxlint-tsgolint
+      - vite-plus
 
   '@tsconfig/node-ts@23.6.4': {}
 
@@ -1833,6 +1861,8 @@ snapshots:
   tinyrainbow@3.1.1: {}
 
   totalist@3.0.1: {}
+
+  typescript@6.0.3: {}
 
   typescript@7.0.2:
     optionalDependencies:
