@@ -3,10 +3,8 @@ import { Effect, Schema } from 'effect'
 import { SecureRandom } from 'effect/crypto'
 import { describe, expect, test } from 'vite-plus/test'
 
-// oxlint-disable-next-line rules/no-import-from-barrel-package -- These tests exercise the public entry point rather than its internals.
-import { makePrefixedUUIDv4, UserDefinedId, UUIDv4 } from './index.ts'
-// oxlint-disable-next-line rules/no-import-from-barrel-package -- The public export test checks the entire namespace.
-import * as Identify from './index.ts'
+import { makePrefixedUUIDv4, UserDefinedId, UUIDv4 } from './identifiers.ts'
+import * as Identify from './identifiers.ts'
 
 const isUserDefinedId = Schema.is(UserDefinedId)
 const isUUIDv4 = Schema.is(UUIDv4)

@@ -28,13 +28,8 @@ export default defineConfig({
     ...preset,
     ignorePatterns,
     options: { ...preset.options, typeCheck: true },
-    overrides: [
-      ...(preset.overrides ?? []),
-      // Keep the established public entry point.
-      { files: ['src/index.ts'], rules: { 'rules/no-index-filename': 'off' } },
-    ],
   },
-  pack: { clean: true, dts: true, entry: ['src/index.ts'], format: ['esm'], platform: 'neutral' },
+  pack: { clean: true, dts: true, entry: { index: 'src/identifiers.ts' }, format: ['esm'], platform: 'neutral' },
   run: {
     tasks: {
       build: {
@@ -59,5 +54,5 @@ export default defineConfig({
       },
     },
   },
-  test: { include: ['src/**/*.test.ts'] },
+  test: { dir: 'src' },
 })
