@@ -3,7 +3,7 @@
 ## Repository structure
 
 ```text
-src/index.ts        Identifier schemas and prefixed UUIDv4 factory, all public exports
+src/identifiers.ts  Identifier schemas and prefixed UUIDv4 factory, all public exports
 src/index.test.ts   Public-entry-point tests with externally provided secure randomness
 vite.config.ts      Vite+ formatter, linter, tests, packaging, and tasks
 package.json        Package identity and runtime/type export map
@@ -54,7 +54,7 @@ flake.nix           Development shells only
 - Return only `{ schema, make }`. The reusable `make` effect retrieves the caller's secure randomness service on each execution.
 - Do not introduce a central identifier registry or application migrations.
 
-- Export the consumer API from `src/index.ts` and test that public entry point.
+- Export the consumer API from `src/identifiers.ts` and test that public entry point.
 - Keep `package.json` export conditions aligned with `dist/index.js` and `dist/index.d.ts`, with `types` before `import`.
 - This package is ESM-only. Do not imply CommonJS support without adding and validating that output.
 - `vp check` checks source types, but does not prove declarations reach consumers. For export changes, install a real npm archive into an isolated consumer under `tmp/`, compile imports by package name with strict NodeNext resolution, check rejected invalid calls, and execute the built exports.
@@ -62,8 +62,8 @@ flake.nix           Development shells only
 ## Development tools
 
 - **Vite+**: Both formatter and linter use the configuration in `vite.config.ts` through `vp check`. Tests use `vite-plus/test`. `vp pack` delegates library builds and declaration generation to tsdown. `vp build` invokes Vite production builds and does not natively emit declarations, so the cache-aware `build` task invokes `vp pack` without a declaration plugin.
-- **Task caching**: Vite+ configuration tasks, including `fix`, cache by default. The `ci` dependency graph allows check, test, and build to run concurrently. Build inputs use automatic tracking except `dist/**`. Explicit `cache: { output: ["dist/**"] }` restores JavaScript and declarations on cache hits. Vite+ automatically declines to cache a `fix` run that reads and rewrites the same input, while unchanged runs can hit cache. Keep `dist/` ignored by the formatter and linter. TypeScript default discovery can include built declarations.
-- **TypeScript**: `tsconfig.json` extends the caret-versioned presets `@tsconfig/strictest`, then `@tsconfig/node-ts`. It retains strictness including `exactOptionalPropertyTypes` and `noUncheckedIndexedAccess`, and inherits import-extension rewriting, erasable syntax, and verbatim module syntax. Rewriting enables TypeScript import extensions without a duplicate local flag. Local options are only ESNext, NodeNext, no-emit source checks, and Node types. NodeNext module resolution is inferred from the module setting. Use default TypeScript file discovery without local include/exclude lists. Remove temporary TypeScript consumers before whole-project checks because discovery does not honor `.gitignore`.
+- **Task caching**: Vite+ configuration tasks, including `fix`, cache by default. The `ci` dependency graph allows check, test, and build to run concurrently. Build inputs use automatic tracking except `dist/**`. Explicit `cache: { output: ["dist/**"] }` restores JavaScript and declarations on cache hits. Vite+ automatically declines to cache a `fix` run that reads and rewrites the same input, while unchanged runs can hit cache. Keep `dist/` ignored by the formatter and linter.
+- **TypeScript**: `tsconfig.json` extends the caret-versioned presets `@tsconfig/strictest`, then `@tsconfig/node-ts`. It retains strictness including `exactOptionalPropertyTypes` and `noUncheckedIndexedAccess`, and inherits import-extension rewriting, erasable syntax, and verbatim module syntax. Rewriting enables TypeScript import extensions without a duplicate local flag. Local options are only ESNext, NodeNext, no-emit source checks, and Node types. NodeNext module resolution is inferred from the module setting. TypeScript discovers root and `src/` files without including built declarations or scratch consumers. Vite+ discovers tests under `src/` using its default test patterns.
 - **Nix flakes**: Pin the development shell only. This library's default shell supplies only nixfmt and runs the externally available `vp config` to enable Git hooks. The `ci` shell supplies the same tools with an empty shell hook. Bootstrap Node.js 24, pnpm, and Vite+ externally before entering the shell. CI uses the shared TypeScript setup for these tools. Preserve the nixfmt-only shell. This library does not require a native application build or export a package/CLI overlay. Leave unrelated Bun CLIs unmanaged. pnpm installs dependencies, creates package archives, and supports the shared npm publication action.
 - **GitHub Actions**: CI runs `setup-nix@main` with `dev-shell: ci`, then `setup-typescript@main`. The shared TypeScript setup selects pnpm through `packageManager`, and verification loads the hook-free environment with `eval "$(nix print-dev-env "$GITHUB_WORKSPACE#ci")"` and runs `vp run ci`. All tasks retain their default caching. Keep shared `totto2727-org/monorepo` actions on `@main`.
 
