@@ -27,6 +27,8 @@ vp add @totto2727/effect-identify effect@^4.1.4
 
 ## API
 
+Use the [effect-identify agent skill](.agents/skills/effect-identify/SKILL.md) to choose the identifier contract for a resource.
+
 ### `UserDefinedId`
 
 A string schema for 1 to 128 ASCII letters, digits, underscores, or hyphens.
